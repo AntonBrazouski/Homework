@@ -19,12 +19,6 @@ class FlyingBird(Bird):
         Bird.__init__(self, name)
         self.ration = ration
 
-    def fly(self):
-        pass
-
-    def walk(self):
-        pass
-
     def eat(self):
         print(self.ration)
 
@@ -40,8 +34,8 @@ class NonFlyingBird(Bird):
         # self.name = name
         self.ration = ration
 
-    def walk(self):
-        pass
+    def fly(self):
+        raise AttributeError(f"{self.name} object has no attribute 'fly'")
 
     def swim(self):
         print(f"{self.name} bird can swim")
@@ -50,7 +44,7 @@ class NonFlyingBird(Bird):
         print("It eats mostly fish")
 
     def __str__(self):
-        pass
+        print(f"{self.name} can walk and swim")
 
 # inherit
 class SuperBird(FlyingBird, NonFlyingBird):
@@ -60,23 +54,14 @@ class SuperBird(FlyingBird, NonFlyingBird):
         # self.name = name
         self.ration = 'It eats fish'
 
-    def fly(self):
-        pass
-
-    def walk(self):
-        pass
-
-    def swim(self):
-        pass
-
-    def eat(self):
-        pass # 
-
     def __str__(self):
         print(f"{self.name} bird can walk, swim and fly")
         return ""
 
-
+    def fly(self):
+        # print(f"{self.name} bird can fly")
+        # super().fly()
+        Bird.fly(self)
     
 
 b = Bird("Anny")
@@ -84,7 +69,7 @@ b.walk()
 
 p = NonFlyingBird("Penguin", "fish")
 p.swim()
-# p.fly()
+# p.fly() #
 p.eat()
     
 c = FlyingBird("Canary")
@@ -93,4 +78,7 @@ c.eat()
 
 s = SuperBird("Gull")
 str(s)
-# s.mro()
+s.eat()
+s.swim()
+s.fly() 
+print(SuperBird.mro())
