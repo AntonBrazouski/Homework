@@ -24,9 +24,23 @@ print(type(resp_data))
 items = re.findall(r'<item>(.*?)</item>', str(resp_data))
 
 data = []
+data_dict = {}
 for each_item in items:
-    item = re.findall(r'<title>(.*?)</title>', str(each_item))
-    data.append(item[0])
+    item = str(each_item)
+    
+    title = re.findall(r'<title>(.*?)</title>', str(each_item))[0]
+    
 
+    link = re.findall(r'<link>(.*?)</link>', item)[0]
+    pub_date = re.findall(r'<pubDate>(.*?)</pubDate>', item)[0]
+    data_dict['title'] = title
+    data_dict['link'] = link 
+    data_dict['pub_date'] = pub_date
+
+    data.append(data_dict)
+    #print(data_dict)
+    data_dict = {}
+
+print(data[0:2])
 for item in data:
     print(item)
