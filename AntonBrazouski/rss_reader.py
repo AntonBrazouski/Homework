@@ -1,6 +1,7 @@
 import argparse
 import urllib.request
 import re
+import json
 
 
 # argparse
@@ -8,7 +9,7 @@ import re
 parser = argparse.ArgumentParser(description='RSS Parser')
 parser.add_argument(
                     'link',
-                    metavar='LNK',
+                    metavar='L',
                     type=str,
                     help='link for rss feed'
                     )
@@ -20,6 +21,12 @@ parser.add_argument(
                     )
 
 parser.add_argument(
+                    '--json',
+                    action='store_true',
+                    help='Print result as JSON in stdout'
+)
+
+parser.add_argument(
                     '-v', "--verbose",
                     action='store_true',
                     help='Outputs verbose status messages'
@@ -27,7 +34,7 @@ parser.add_argument(
 
 parser.add_argument(
                     '--limit',
-                    metavar='LIM',
+                    metavar='LIMIT',
                     type=int,
                     help='limit feed'
 )
@@ -35,7 +42,8 @@ parser.add_argument(
 args = parser.parse_args()
 
 if args.verbose:
-    print(f"parsing rss link: {args.link}")
+    print(f"\t - Parsing rss link: {args.link}")
+
 
 
 # urllib
@@ -65,8 +73,16 @@ for each_item in items:
     # print(data_dict)
     data_dict = {}
 
-for item in data:
-    print(f"{item['title']}")
+if args.json:
+    if args.verbose:
+        print('\t - JSON mode is ON')
+    data_json = json.dumps(data)
+    print(data_json)
+else:
+    for item in data:
+        print(f"{item['title']}")
+
+# print(dir(json))
 
 # print(data[0:2])
 # for item in data:
