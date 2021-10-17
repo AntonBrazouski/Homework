@@ -3,7 +3,7 @@ import sys
 
 
 
-def parse_args(args):
+def parse_args():
     parser = argparse.ArgumentParser()
 
     # parser.add_argument(
@@ -20,7 +20,8 @@ def parse_args(args):
                         help="Print version info"
                         )
     
-    return parser.parse_args(args) 
+    args = parser.parse_args() 
+    print(args)
 
 
-parser = parse_args(sys.argv[1:])
+parser = parse_args()
