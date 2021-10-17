@@ -26,10 +26,6 @@ class EvenRange:
             # except StopIteration as msg:
             #     print(msg)
 
-               
-            
-
-
 
 
 er1 = EvenRange(7,11)
