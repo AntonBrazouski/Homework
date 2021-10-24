@@ -5,7 +5,7 @@ import json
 
 
 def get_console_input():
-    """ returns 'argparse.Namespace' """
+    """ return 'argparse.Namespace' """
 
     parser = argparse.ArgumentParser(description='RSS Parser')
     parser.add_argument(
@@ -17,7 +17,7 @@ def get_console_input():
     parser.add_argument(
                         '--version',
                         action='version',
-                        version='RSS reader, version 0.1',
+                        version='RSS reader, version 0.2',
                         help="Print version info"
                         )
 
@@ -44,30 +44,61 @@ def get_console_input():
 
 
 def print_news_from_argparse_namespase(args):
-    """ prints RSS news to console """
+    """ print RSS news to console """
+    url = args.link
+    limit = args.limit
+
+    if args.limit and args.verbose:
+        print(f"\t * Showing {args.limit} news items")
 
     # --verbose
     if args.verbose:
-        print(f"\t - Parsing rss link: {args.link}")
+        print(f"\t * Parsing rss link: {args.link}")
 
     # urllib --> vars
-    url = args.link
-    limit = args.limit
+
     
     # request n response --> bytes
     request_url = urllib.request.urlopen(url)
     resp_data = request_url.read()
-    # print(type(resp_data))
 
-    # news
+    # print(type(resp_data))
+    # print()
+
+
+    # catch rss version
+    rss_tag = re.findall(r'<rss(.*?)>',str(resp_data))[0]
+    # if not rss_tag:
+    #     print('\t * Link is fully supported RSS feed')
+    # print(rss_tag)
+    rss_version = re.findall(r'version="(.*?)"', str(rss_tag))[0]
+    
+    if args.verbose:
+        print(f"\t * RSS {rss_version}")
+
+    # print(rss_tag)
+    is_rss_version_2 = '2.0' in rss_tag
+    # print(is_rss_version_2)
+
+    # channel info
+    channel = re.findall(r'<title>(.*?)</title>', str(resp_data))[0]
+    if args.verbose:
+        print(f"\t * {channel}")
+
+    # news items --limit
     items = re.findall(r'<item>(.*?)</item>', str(resp_data))[0:limit]
 
+    pub_date = re.findall(r'<pubDate>(.*?)</pubDate>', str(resp_data))[0]
+    if args.verbose:
+        print(f"\t * Updated: {pub_date}")
+    
     # db list and item dict
     data = []
     data_dict = {}
 
-    # news to db
+    # news to data list of dicts
     for each_item in items:
+        # print('\n' + each_item)
         item = str(each_item)
         title = re.findall(r'<title>(.*?)</title>', str(each_item))[0]
         link = re.findall(r'<link>(.*?)</link>', item)[0]
@@ -83,14 +114,18 @@ def print_news_from_argparse_namespase(args):
     # json mode
     if args.json:
         if args.verbose:
-            print('\t - JSON mode is ON')
+            print('\t * JSON mode is ON')
         data_json = json.dumps(data)
         print(data_json)
 
-    # usual news output - titles 
+    # default news output - titles 
     else:
         for item in data:
-            print(f"{item['title']}")
+            if args.verbose:
+                print(f"{item['title']} -- {item['pub_date']}")
+                print(f"\t{item['link']}")
+            else:
+                print(f"{item['title']}")
 
 
 
