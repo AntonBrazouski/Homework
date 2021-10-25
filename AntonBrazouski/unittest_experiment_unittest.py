@@ -5,13 +5,13 @@ class SimpleTest(unittest.TestCase):
 
     def test_parser(self):
         
-        parser = parse_args('')
+        parser = parse_args()
         self.assertTrue(True)
 
     def test_parser_2(self):
-        parser = parse_args('')
+        parser = parse_args()
 
-        # parser = parse_args('--version')
+        #parser = parse_args('--version')
         #print(dir(parser))
         #print(parser._get_args())
         # parser = parse_args(['--version'])

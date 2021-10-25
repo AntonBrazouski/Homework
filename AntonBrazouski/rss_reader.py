@@ -103,6 +103,7 @@ def print_news_from_argparse_namespase(args):
         title = re.findall(r'<title>(.*?)</title>', str(each_item))[0]
         link = re.findall(r'<link>(.*?)</link>', item)[0]
         pub_date = re.findall(r'<pubDate>(.*?)</pubDate>', item)[0]
+        # title = re.sub(r'[\xe2]', '', title)
         data_dict['title'] = title
         data_dict['link'] = link
         data_dict['pub_date'] = pub_date
@@ -132,3 +133,4 @@ def print_news_from_argparse_namespase(args):
 if __name__ == '__main__':
     user = get_console_input()
     print_news_from_argparse_namespase(user)
+
